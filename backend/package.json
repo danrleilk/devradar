@@ -1,7 +1,7 @@
 {
   "name": "devradar",
   "version": "1.0.0",
-  "description":"Projeto Resultante da Semana Omnistack #10",
+  "description": "Projeto Resultante da Semana Omnistack #10",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -11,7 +11,9 @@
     "axios": "^0.19.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "mongoose": "^5.8.7"
+    "http": "^0.0.0",
+    "mongoose": "^5.8.7",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"

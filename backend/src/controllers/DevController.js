@@ -1,6 +1,7 @@
 const Dev = require('./../models/Dev')
 const parseStringAsArray = require('../utils/parseStringAsArray');
 const getDataFromGithub = require('../utils/getDataFromGithub');
+const { findConnections, sendMessage } = require('../websocket');
 
 module.exports = {
     async index(request, response) {
@@ -31,6 +32,13 @@ module.exports = {
                 techs: techsArray,
                 location,
             });
+            // filtrar as conexões que estão até 10 km e ao menos 1 tech igual.
+            const sendSocketMessageTo = findConnections(
+                { latitude, longitude },
+                techsArray,
+            )
+
+            sendMessage(sendSocketMessageTo, 'new-dev', dev);
         } else {
             return response.json("Usuário já cadastrado.")
         }
