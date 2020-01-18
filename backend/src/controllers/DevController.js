@@ -83,7 +83,7 @@ module.exports = {
                     }
                 );
             } catch (e) {
-                print(e);
+                console.log(e);
             }
             dev = await Dev.findOne({ github_username });
             return response.json(dev);
