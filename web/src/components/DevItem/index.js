@@ -2,7 +2,20 @@ import React from 'react';
 
 import './styles.css';
 
-function DevItem({ dev }) {
+function DevItem({ dev, onDelete, onEdit }) {
+    const [{ editMode, dev: editingDev }, setEditMode] = onEdit;
+
+    function editDev() {
+        setEditMode({
+            editMode: (editingDev._id !== dev._id) ? true : !editMode,
+            dev
+        });
+    };
+
+    function deleteDev() {
+        onDelete(dev.github_username);
+    };
+
     return (
         <li className="dev-item">
             <header>
@@ -13,8 +26,13 @@ function DevItem({ dev }) {
                 </div>
             </header>
             <p>{dev.bio}</p>
-            <a href={`https://github.com/${dev.github_username}`}>Acessar Perfil no Github</a>
-        </li>
+
+            <div className="actions">
+                <button><a href={`https://github.com/${dev.github_username}`}>Acessar Perfil no Github</a></button>
+                <button onClick={editDev}>Editar</button>
+                <button onClick={deleteDev}>Excluir</button>
+            </div>
+        </li >
     )
 }
 

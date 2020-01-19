@@ -1,37 +1,58 @@
 import React, { useState, useEffect } from 'react';
+import './styles.css';
 
-function DevForm({ onSubmit }) {
+function DevForm({ onSubmit, onEdit, editModeState }) {
 
+    const [{ editMode, dev }, setEditMode] = editModeState;
     const [latitude, setLatitude] = useState('');
     const [longitude, setLongitude] = useState('');
     const [github_username, setGithubUsername] = useState('');
     const [techs, setTechs] = useState('');
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
+        if (!editMode) {
+            setGithubUsername('');
+            setTechs('');
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
 
-                setLatitude(latitude);
-                setLongitude(longitude);
-            },
-            (err) => {
-                console.log(err);
-            }, {
-            timeout: 30000,
+                    setLatitude(latitude);
+                    setLongitude(longitude);
+                },
+                (err) => {
+                    console.log(err);
+                }, {
+                timeout: 30000,
+            }
+            )
+        } else {
+            const { github_username, techs, location: { coordinates: [latitude, longitude] } } = dev;
+            setGithubUsername(github_username);
+            setTechs(techs.join(', '));
+            setLatitude(latitude);
+            setLongitude(longitude);
         }
-        )
-    }, []);
+    }, [editMode, dev]);
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        onSubmit({
-            github_username,
-            techs,
-            latitude,
-            longitude,
-        });
-        
+        if (editMode) {
+            await onEdit(dev, {
+                github_username,
+                techs,
+                latitude,
+                longitude
+            })
+            setEditMode({ editMode: false, dev: {} });
+        } else {
+            await onSubmit({
+                github_username,
+                techs,
+                latitude,
+                longitude,
+            });
+        }
         setGithubUsername('');
         setTechs('');
     }
@@ -42,6 +63,7 @@ function DevForm({ onSubmit }) {
                 <label htmlFor="github_username">Usuário do Github</label>
                 <input name="github_username" id="github_username"
                     value={github_username}
+                    disabled={editMode}
                     onChange={e => setGithubUsername(e.target.value)}
                     required />
             </div>

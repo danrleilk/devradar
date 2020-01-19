@@ -1,4 +1,4 @@
-const Dev = require('./../models/Dev')
+const Dev = require('../models/Dev')
 const parseStringAsArray = require('../utils/parseStringAsArray');
 const getDataFromGithub = require('../utils/getDataFromGithub');
 const { findConnections, sendMessage } = require('../websocket');
@@ -46,7 +46,7 @@ module.exports = {
     },
 
     async destroy(request, response) {
-        const { github_username } = request.body;
+        const { github_username } = request.query;
 
         try {
             await Dev.findOneAndDelete({ github_username })
@@ -77,8 +77,10 @@ module.exports = {
                 coordinates: [longitude, latitude],
             };
 
+            let update;
+
             try {
-                await Dev.updateOne(
+                update = await Dev.updateOne(
                     { github_username: github_username },
                     {
                         $set: {
@@ -94,7 +96,11 @@ module.exports = {
                 console.log(e);
             }
             dev = await Dev.findOne({ github_username });
-            return response.json(dev);
+            return response.json({
+                dev,
+                modified: update.nModified,
+                ok: update.ok
+            });
         } else {
             return response.json('Dev não encontrado.');
         }
