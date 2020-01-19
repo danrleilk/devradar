@@ -1,7 +1,7 @@
 <h1 align="center">Semana Omnistack 10</h1>
 <p align="center">Projeto <strong>DevRadar</strong> desenvolvido durante a 10ª Semana Omnistack da Rocketseat</p>
 
-<img src="./static/omnistack.png" align="center"></img>
+<img src="./media/omnistack.png" align="center"></img>
 
 ## :rocket: Tecnologias
 
